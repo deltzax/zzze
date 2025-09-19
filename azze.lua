@@ -1,7 +1,7 @@
 --[[ 
 Standalone Evade and Kick System (FollowUp)
 Client-side only, draggable UI, hold-to-spam with G
-Stylish animated UI with pop toggle, uniform drag, glow, and responsive Close button
+Stylish animated UI with pop toggle, uniform drag, glow effect, and responsive buttons
 --]]
 
 local Players = game:GetService("Players")
@@ -142,11 +142,11 @@ RunService.RenderStepped:Connect(function()
     Glow.Transparency = 0.4 + 0.2 * math.sin(tick()*5)
 end)
 
--- Toggle Button (responsive, centered)
+-- Toggle Button
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-ToggleBtn.Size = UDim2.new(0.85, 0, 0.35, 0)
-ToggleBtn.Position = UDim2.new(0.5, 0, 0.5, 0)
+ToggleBtn.Size = UDim2.new(0, 240, 0, 50)
+ToggleBtn.Position = UDim2.new(0.5, 0, 0.5, 0) -- Centré
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleBtn.Font = Enum.Font.GothamBold
@@ -158,88 +158,66 @@ local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 12)
 ToggleCorner.Parent = ToggleBtn
 
--- Subtle glow on toggle hover
-local ToggleGlow = Instance.new("UIStroke")
-ToggleGlow.Parent = ToggleBtn
-ToggleGlow.Thickness = 2
-ToggleGlow.Color = Color3.fromRGB(0, 200, 255)
-ToggleGlow.Transparency = 1
-ToggleGlow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-local function AnimateToggleGlow(enter)
-    local target = enter and 0.3 or 1
-    TweenService:Create(ToggleGlow, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Transparency = target}):Play()
-end
-
-ToggleBtn.MouseEnter:Connect(function() AnimateToggleGlow(true) end)
-ToggleBtn.MouseLeave:Connect(function() AnimateToggleGlow(false) end)
-
--- Close Button (always in top-right corner)
+-- Close Button (toujours collée au coin supérieur droit)
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 32, 0, 32)
-CloseBtn.Position = UDim2.new(1, -8, 0, 8)
-CloseBtn.AnchorPoint = Vector2.new(1, 0)
+CloseBtn.AnchorPoint = Vector2.new(1, 0) -- ancrée au coin
+CloseBtn.Size = UDim2.new(0, 36, 0, 36)
+CloseBtn.Position = UDim2.new(1, 0, 0, 0) -- coin exact
 CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.Font = Enum.Font.GothamBold
-CloseBtn.TextSize = 18
+CloseBtn.TextSize = 20
 CloseBtn.Parent = Frame
 
 local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 12)
+CloseCorner.CornerRadius = UDim.new(0, 18)
 CloseCorner.Parent = CloseBtn
 
--- Border glow for Close button
-local CloseGlow = Instance.new("UIStroke")
-CloseGlow.Parent = CloseBtn
-CloseGlow.Thickness = 2
-CloseGlow.Color = Color3.fromRGB(255, 100, 100)
-CloseGlow.Transparency = 0.4
-CloseGlow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
--- Hover effects for Close button
-CloseBtn.MouseEnter:Connect(function()
-    TweenService:Create(CloseBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back), {
-        BackgroundColor3 = Color3.fromRGB(255, 70, 70),
-        Size = UDim2.new(0,36,0,36)
-    }):Play()
-end)
-CloseBtn.MouseLeave:Connect(function()
-    TweenService:Create(CloseBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back), {
-        BackgroundColor3 = Color3.fromRGB(200,50,50),
-        Size = UDim2.new(0,32,0,32)
-    }):Play()
-end)
-
--- Toggle UI update with pop animation
+-- Update Toggle UI with pop animation
 local function UpdateToggleUI()
     local keyName = tostring(EvadeKickBind):gsub("Enum.KeyCode.", "")
     if EvadeKickEnabled then
-        ToggleBtn.Text = "Evade Kick: ON ("..keyName..")"
+        ToggleBtn.Text = "Evade Kick: ON (" .. keyName .. ")"
         TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
             BackgroundColor3 = Color3.fromRGB(50,220,50),
-            Size = UDim2.new(0.9,0,0.4,0)
+            Size = UDim2.new(0, 250, 0, 55)
         }):Play()
         task.wait(0.1)
-        TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0.85,0,0.35,0)}):Play()
+        TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 240, 0, 50)}):Play()
     else
-        ToggleBtn.Text = "Evade Kick: OFF ("..keyName..")"
+        ToggleBtn.Text = "Evade Kick: OFF (" .. keyName .. ")"
         TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
             BackgroundColor3 = Color3.fromRGB(40,40,45),
-            Size = UDim2.new(0.9,0,0.4,0)
+            Size = UDim2.new(0, 250, 0, 55)
         }):Play()
         task.wait(0.1)
-        TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0.85,0,0.35,0)}):Play()
+        TweenService:Create(ToggleBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 240, 0, 50)}):Play()
     end
 end
 
--- Drag animation for frame
+-- Hover effects
+ToggleBtn.MouseEnter:Connect(function()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(70,70,80)}):Play()
+end)
+ToggleBtn.MouseLeave:Connect(UpdateToggleUI)
+
+CloseBtn.MouseEnter:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255,70,70)}):Play()
+end)
+CloseBtn.MouseLeave:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(200,50,50)}):Play()
+end)
+
+-- Drag animation (gonflement)
 Frame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        TweenService:Create(Frame, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0,300,0,140)}):Play()
+        TweenService:Create(Frame, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 300, 0, 140)
+        }):Play()
     end
 end)
+
 Frame.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         TweenService:Create(Frame, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = OriginalSize}):Play()
@@ -267,9 +245,9 @@ end)
 
 -- Close action
 CloseBtn.MouseButton1Click:Connect(function()
-    TweenService:Create(Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Position = UDim2.new(0.5,-140,1,200)}):Play()
+    TweenService:Create(Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Position = UDim2.new(0.5, -140, 1, 200)}):Play()
     task.wait(0.3)
     ScreenGui:Destroy()
 end)
 
-warn("Standalone Evade and Kick system loaded! Stylish UI with glow, pop toggle, uniform drag, responsive buttons, and corner Close ready.")
+warn("Standalone Evade and Kick system loaded! Stylish UI with pop toggle, uniform drag, responsive buttons, glow, and close button locked to corner ready.")
