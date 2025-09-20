@@ -296,8 +296,8 @@ function sFLY()
     bv.Velocity = Vector3.new(0, 0.1, 0)  -- Petite vitesse initiale pour éviter le blocage
     bv.MaxForce = Vector3.new(100000, 100000, 100000)
     
-    local control = {f = 0, b = 0, l = 0, r = 0, q = 0, e = 0}
-    local lastcontrol = {f = 0, b = 0, l = 0, r = 0, q = 0, e = 0}
+    local control = {f = 0, b = 0, l = 0, r = 0}
+    local lastcontrol = {f = 0, b = 0, l = 0, r = 0}
     
     -- Connexions pour les touches
     flyKeyDown = AddConnection(UserInputService.InputBegan:Connect(function(input)
@@ -311,10 +311,6 @@ function sFLY()
             control.l = -iyflyspeed
         elseif input.KeyCode == Enum.KeyCode.D then
             control.r = iyflyspeed
-        elseif input.KeyCode == Enum.KeyCode.E and QEfly then
-            control.q = iyflyspeed * 2
-        elseif input.KeyCode == Enum.KeyCode.Q and QEfly then
-            control.e = -iyflyspeed * 2
         end
     end), "Fly")
     
@@ -329,10 +325,6 @@ function sFLY()
             control.l = 0
         elseif input.KeyCode == Enum.KeyCode.D then
             control.r = 0
-        elseif input.KeyCode == Enum.KeyCode.E then
-            control.q = 0
-        elseif input.KeyCode == Enum.KeyCode.Q then
-            control.e = 0
         end
     end), "Fly")
     
@@ -349,7 +341,7 @@ function sFLY()
         
         -- Calcul de la vitesse basé sur les contrôles
         local speed = 50
-        local moveVector = Vector3.new(control.l + control.r, control.q + control.e, control.f + control.b)
+        local moveVector = Vector3.new(control.l + control.r, 0, control.f + control.b)
         
         if moveVector.Magnitude > 0 then
             -- Conversion des inputs en direction relative à la caméra
@@ -370,8 +362,7 @@ function sFLY()
             
             lastcontrol = {
                 f = control.f, b = control.b, 
-                l = control.l, r = control.r, 
-                q = control.q, e = control.e
+                l = control.l, r = control.r
             }
         else
             -- Arrêt en douceur
